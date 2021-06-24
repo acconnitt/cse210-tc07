@@ -112,9 +112,9 @@ class Shooter(Flying_Object):
     def draw(self):
         """ """
         
-        img = "W10/alive_shooter.png"
+        img = "assets/alive_shooter.png"
         texture = arcade.load_texture(img)
-        img_hit = "w10/dead_shooter.png"
+        img_hit = "assets/dead_shooter.png"
         texture2 = arcade.load_texture(img_hit)
 
         width = texture.width / 8
@@ -151,7 +151,7 @@ class Bullet(Flying_Object):
         
     def draw(self, shooter):
         """draws the bullet sprite. """
-        img = "W10/laserBlue01.png"
+        img = "assets/laserBlue01.png"
         texture = arcade.load_texture(img)
 
         width = texture.width
@@ -248,44 +248,7 @@ class Game(arcade.Window):
             
         self.shooter.is_off_screen(SCREEN_WIDTH, SCREEN_HEIGHT, self.shooter.radius * 2)
         
-    def check_collisions(self):
-        """Contains logic of collisions.
-
-           Asteroids collide with the ship and bullets
-           Bullets collide only with asteroids
-           The ship collides with bullets, asteroids, and powerups
-           Powerups collide only with the ship."""
-        
-        for asteroid in self.asteroids:  
-            if self.ship.alive and asteroid.alive:
-                too_close = self.ship.radius + asteroid.radius
-
-                if (abs(self.ship.center.x - asteroid.center.x) < too_close and abs(self.ship.center.y - asteroid.center.y) < too_close):
-                    if self.ship.radius > 0:
-                        self.ship.collide(self.shields)
-                        asteroid.collide(self.asteroids)
-                    
-        
-        for bullet in self.bullets:
-            for asteroid in self.asteroids:
-                if bullet.alive and asteroid.alive:
-                    too_close = bullet.radius + asteroid.radius
-
-                    if (abs(bullet.center.x - asteroid.center.x) < too_close and
-                                abs(bullet.center.y - asteroid.center.y) < too_close):
-                        # its a hit!
-                        asteroid.collide(self.asteroids)
-                
-                        bullet.alive = False
-                        
-                        
-        for powerup in self.powerups:
-            if self.ship.alive and powerup.alive:
-                too_close = SHIP_RADIUS + powerup.radius
-
-                if (abs(self.ship.center.x - powerup.center.x) < too_close and abs(self.ship.center.y - powerup.center.y) < too_close):
-                    if SHIP_RADIUS > 0:
-                        powerup.collide(self.ship, self.shields)
+    
                             
     def check_keys(self):
         """
