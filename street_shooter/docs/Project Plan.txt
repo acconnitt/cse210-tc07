@@ -1,0 +1,9 @@
+Final Project Plan - Team 1 - Mark, Alex, Benjamin
+
+Question 1 - We are going to create a top down shooter/runner game where you keep running forward and shooting different objects and avoiding obstacles in your path to keep going. The goal is to survive for as long as possible. Shooting certain objects can increase your abilities or give power ups.
+
+Question 2 - We will be using python, the arcade library, the random library, and potentially the math library.
+
+Question 3 - We are going to have a main menu screen, an instructions screen, a credits screen, a game over screen, the game screen, and a pause screen. The game scene will be the player which running down the screen, where different blocks and obstacles will spawn which they have to avoid or shoot. We will have a gun shooting speed power up, bullet damage power up, and extra life power up. We will also have sound effects and a score/life tracker. The pause screen will allow you to pause the game while playing. The game over screen will appear when you run out of lives, the instructions screen will show you how to play, the credits screen shows the credits of everyone who made the game, and the main menu will have the buttons to play game, instructions, and credits. 
+
+Question 4 - The timeline we will follow is the timeline according to the course.
