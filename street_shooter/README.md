@@ -26,5 +26,5 @@ root                    (project root folder)
 
 ## Authors
 ---
-[list author names and emails]
+Alex
 Mark Vagil - markvagil@byui.edu
