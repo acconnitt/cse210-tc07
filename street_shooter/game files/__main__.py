@@ -5,6 +5,8 @@ import random
 import threading
 from abc import ABC, abstractmethod
 
+from arcade import sprite
+
 # These are Global constants to use throughout the game
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 600
@@ -17,6 +19,7 @@ BULLET_FIRE_RATE = .5
 SHOOTER_SPEED = 5
 SHOOTER_SIZE = 50
 
+TARGET_SPAWN_RATE = .5
 
 
 
@@ -166,7 +169,30 @@ class Bullet(Flying_Object):
         arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
         
 
+class Target(Flying_Object):
 
+    def __init__(self):
+        super().__init__()
+        self.speed = 3
+        self.radius=  4
+        self.velocity.dy = -3
+        self.velocity.dx = 0
+
+    def draw(self):
+        """ """
+        
+        img = "assets/ufo.png"
+        texture = arcade.load_texture(img)
+        
+        width = texture.width // 6
+        height = texture.height // 6
+        alpha = 255
+
+        x = self.center.x
+        y = self.center.y
+        angle = self.angle + 90
+
+        arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
 
 """
 ------------------------------------------------------
@@ -191,11 +217,16 @@ class Game(arcade.Window):
         """
         super().__init__(width, height)
         self.shooter = Shooter()
+        self.targets = []
+        self.load_targets()
+        
         
 
         self.held_keys = set()
         self.bullets = []
         self.load_magazine()
+
+
 
         # TODO: declare anything here you need the game class to track
        
@@ -214,6 +245,12 @@ class Game(arcade.Window):
         for bullet in self.bullets:
             bullet.draw(self.shooter)
         
+
+        for target in self.targets:
+            target.draw()
+
+
+
     def update(self, delta_time):
         """
         Update each object in the game.
@@ -234,7 +271,14 @@ class Game(arcade.Window):
                 bullet.alive = False
             bullet.advance()
 
-       
+        for target in self.targets:
+            if target.center.y < 0:
+               target.alive = False
+            target.advance()
+
+        
+            
+        
         
 
         
@@ -279,6 +323,16 @@ class Game(arcade.Window):
         bullet.center.y = SHOOTER_SIZE + BULLET_RADIUS *1.5
         self.bullets.append(bullet)
         t = threading.Timer(self.shooter.fire_rate, self.load_magazine)
+        t.start()
+
+
+    def load_targets(self):
+        target = Target();
+        target.center.x =  random.randint(0, SCREEN_WIDTH)
+        target.center.y = SCREEN_HEIGHT + target.radius
+
+        self.targets.append(target)
+        t = threading.Timer(TARGET_SPAWN_RATE, self.load_targets)
         t.start()
 
 
