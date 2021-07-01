@@ -1,4 +1,3 @@
-
 import arcade
 import math
 import random
@@ -8,18 +7,21 @@ from abc import ABC, abstractmethod
 from arcade import sprite
 
 # These are Global constants to use throughout the game
-SCREEN_WIDTH = 500
+SCREEN_WIDTH = 540
 SCREEN_HEIGHT = 600
 
 BULLET_RADIUS = 30
 BULLET_SPEED = 10
 BULLET_FIRE_RATE = .5
 
-
+SHOOTER_RADIUS = 5
 SHOOTER_SPEED = 5
 SHOOTER_SIZE = 50
+START_LIVES = 3
 
-TARGET_SPAWN_RATE = .5
+TARGET_SPAWN_RATE = 1
+TARGET_RADIUS = 13
+TARGET_SPEED = -2
 
 
 
@@ -73,6 +75,11 @@ class Flying_Object():
             
         if (self.center.y < 0 - radius):
             self.center.y = screen_height + radius
+
+    def collide (self):
+        self.lives -= 1
+        if self.lives <= 0:
+            self.alive = False
        
                 
     @abstractmethod
@@ -90,12 +97,13 @@ class Shooter(Flying_Object):
     def __init__(self):
         super().__init__()
         
-        self.radius = 1
+        self.radius = SHOOTER_RADIUS
         self.center.x = SCREEN_WIDTH / 2
         self.center.y = 0 + SHOOTER_SIZE
         self.velocity.dx = 0
         self.velocity.dy = 0
         self.fire_rate = BULLET_FIRE_RATE
+        self.lives = START_LIVES
 
     def move_right(self):
         if self.center.x < SCREEN_WIDTH - SHOOTER_SIZE / 2:
@@ -131,6 +139,9 @@ class Shooter(Flying_Object):
         arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
         '''if self.hit:
             arcade.draw_texture_rectangle(x + 10, y+5, 50, 50, texture2, angle, alpha)'''
+
+
+    
             
         
               
@@ -173,15 +184,15 @@ class Target(Flying_Object):
 
     def __init__(self):
         super().__init__()
-        self.speed = 3
-        self.radius=  4
-        self.velocity.dy = -3
+        self.radius=  TARGET_RADIUS
+        self.velocity.dy = TARGET_SPEED
         self.velocity.dx = 0
+        self.lives = 1
 
     def draw(self):
         """ """
         
-        img = "assets/ufo.png"
+        img = "assets/crate.png"
         texture = arcade.load_texture(img)
         
         width = texture.width // 6
@@ -193,6 +204,16 @@ class Target(Flying_Object):
         angle = self.angle + 90
 
         arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
+        arcade.draw_text(str(self.lives),
+                         self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
+
+
+    def collide (self):
+        self.lives -= 1
+        if self.lives <= 0:
+            self.alive = False
+    
+    
 
 """
 ------------------------------------------------------
@@ -200,7 +221,6 @@ class Target(Flying_Object):
 -------------Actual Game Object-----------------------
 -------------------------------------------------------
 ------------------------------------------------------
-
 """
 class Game(arcade.Window):
     """
@@ -261,7 +281,7 @@ class Game(arcade.Window):
         #self.check_off_screen()
         
         self.cleanup_zombies()
-        #self.check_collisions()
+        self.check_collisions()
 
         # TODO: Tell everything to advance or move forward one step in time
         self.shooter.advance()
@@ -275,6 +295,7 @@ class Game(arcade.Window):
             if target.center.y < 0:
                target.alive = False
             target.advance()
+
 
         
             
@@ -327,13 +348,30 @@ class Game(arcade.Window):
 
 
     def load_targets(self):
-        target = Target();
-        target.center.x =  random.randint(0, SCREEN_WIDTH)
-        target.center.y = SCREEN_HEIGHT + target.radius
+        crate_wall = random.randint (1,5)
+        
+        if crate_wall != 1:
+            target = Target();
+            target.center.x =  random.randint(0, SCREEN_WIDTH)
+            target.center.y = SCREEN_HEIGHT + target.radius
 
-        self.targets.append(target)
-        t = threading.Timer(TARGET_SPAWN_RATE, self.load_targets)
-        t.start()
+            self.targets.append(target)
+            t = threading.Timer(TARGET_SPAWN_RATE, self.load_targets)
+            t.start()
+
+        else:
+            target_location = 45
+            for _ in range(6):
+                target = Target()
+                
+                target.center.x = target_location
+                target.center.y = SCREEN_HEIGHT + target.radius
+                self.targets.append(target) 
+                target_location += 90  
+            t = threading.Timer(TARGET_SPAWN_RATE, self.load_targets)
+            t.start()
+
+        
 
 
     def on_key_press(self, key: int, modifiers: int):
@@ -363,6 +401,35 @@ class Game(arcade.Window):
         for bullet in self.bullets:
             if not bullet.alive:
                 self.bullets.remove(bullet)
+
+        for target in self.targets: 
+            if not target.alive: 
+                self.targets.remove(target)
+
+
+    def check_collisions(self):
+        """Contains logic of collisions."""
+        
+        for target in self.targets:  
+            if self.shooter.alive and target.alive:
+                too_close = self.shooter.radius + target.radius
+
+                if (abs(self.shooter.center.x - target.center.x) < too_close and abs(self.shooter.center.y - target.center.y) < too_close):
+                    self.shooter.collide()
+                    target.collide()
+                    
+        
+        for bullet in self.bullets:
+            for target in self.targets:
+                if bullet.alive and target.alive:
+                    too_close = bullet.radius + target.radius
+
+                    if (abs(bullet.center.x - target.center.x) < too_close and
+                                abs(bullet.center.y - target.center.y) < too_close):
+                        # its a hit!
+                        target.collide()
+                        bullet.alive = False
+                        
                 
                 
 
