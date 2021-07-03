@@ -1,4 +1,4 @@
-from game.director import Director
+from game.game import Game
 from game.constants import constant 
 import arcade
 
