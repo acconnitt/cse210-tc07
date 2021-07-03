@@ -1,8 +1,8 @@
-from game import Constants
-from game import Shooter
-from game import Flying_Object
-from game import Bullet
-from game import Target
+from game import constants
+from game.shooter import Shooter
+from game.flying_object import Flying_Object
+from game.bullet import Bullet
+from game.target import Target
 import arcade
 
 

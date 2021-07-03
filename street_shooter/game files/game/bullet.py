@@ -1,3 +1,6 @@
+from game.flying_object import Flying_Object
+from game import constants
+
 class Bullet(Flying_Object):
     """Standard Bullet that fires from the ship location, and can only collide with asteroids. Is removed after
        a set distance. """
