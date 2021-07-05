@@ -36,13 +36,3 @@ class Flying_Object():
         self.lives -= 1
         if self.lives <= 0:
             self.alive = False
-       
-                
-    @abstractmethod
-    def draw(self):
-        pass
-    
-    
-    @abstractmethod
-    def collide(self):
-        pass

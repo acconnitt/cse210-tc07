@@ -1,4 +1,6 @@
-
+from game import constants
+from game.flying_object import Flying_Object
+import arcade
 
 
 class Shooter(Flying_Object):

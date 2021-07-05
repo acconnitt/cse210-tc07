@@ -1,9 +1,3 @@
-import arcade
-import math
-import random
-import threading
-from abc import ABC, abstractmethod
-from arcade import sprite
 
 # These are Global constants to use throughout the game
 SCREEN_WIDTH = 540
