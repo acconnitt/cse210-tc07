@@ -1,3 +1,6 @@
+from game.flying_object import Flying_Object
+import arcade
+
 class Target(Flying_Object):
 
     def __init__(self):
