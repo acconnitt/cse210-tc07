@@ -5,6 +5,7 @@ import threading
 from abc import ABC, abstractmethod
 
 from arcade import sprite
+from pyglet.libs.win32.constants import WHITEONBLACK
 
 # These are Global constants to use throughout the game
 SCREEN_WIDTH = 540
@@ -14,7 +15,7 @@ BULLET_RADIUS = 30
 BULLET_SPEED = 10
 BULLET_FIRE_RATE = .5
 
-SHOOTER_RADIUS = 5
+SHOOTER_RADIUS = 40
 SHOOTER_SPEED = 5
 SHOOTER_SIZE = 50
 START_LIVES = 3
@@ -117,6 +118,12 @@ class Shooter(Flying_Object):
         else:
             self.center.x = 0 + SHOOTER_SIZE / 2
 
+    def collide(self):
+        self.lives -= 1
+        if self.lives <= 0:
+            self.alive =False
+
+
  
 
   
@@ -134,11 +141,26 @@ class Shooter(Flying_Object):
         x = self.center.x
         y = self.center.y
         angle = self.angle + 90
-        
 
-        arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
-        '''if self.hit:
-            arcade.draw_texture_rectangle(x + 10, y+5, 50, 50, texture2, angle, alpha)'''
+
+        arcade.draw_text(f"Lives: {self.lives}", 15, SCREEN_HEIGHT*.9, arcade.color.RED, 20)
+        if self.alive:
+            arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
+
+        else:
+            arcade.draw_texture_rectangle(x + 10, y+5, 50, 50, texture2, angle, alpha)
+
+
+class Score():
+    def __init__(self):
+        self.score = 0
+
+    def draw(self):
+        arcade.draw_text(f"Score: {self.score}", 15, SCREEN_HEIGHT* .95, arcade.color.DUTCH_WHITE, 20)
+
+    def update_score(self):
+        self.score += 1
+
 
 
     
@@ -208,10 +230,14 @@ class Target(Flying_Object):
                          self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
 
 
-    def collide (self):
+    def collide (self, score):
         self.lives -= 1
         if self.lives <= 0:
+            score.update_score()
             self.alive = False
+
+    def generate_lives(self, score):
+        self.lives = random.randint(1, score.score // 2 + 1)
     
     
 
@@ -238,7 +264,9 @@ class Game(arcade.Window):
         super().__init__(width, height)
         self.shooter = Shooter()
         self.targets = []
+        self.score = Score()
         self.load_targets()
+        
         
         
 
@@ -261,13 +289,17 @@ class Game(arcade.Window):
         # clear the screen to begin drawing
         arcade.start_render()
         # TODO: draw each object
-        self.shooter.draw()
+        
+        
         for bullet in self.bullets:
             bullet.draw(self.shooter)
         
 
         for target in self.targets:
             target.draw()
+
+        self.shooter.draw()
+        self.score.draw()
 
 
 
@@ -339,19 +371,21 @@ class Game(arcade.Window):
             pass
 
     def load_magazine(self):
-        bullet = Bullet()
-        bullet.center.x = self.shooter.center.x + 6
-        bullet.center.y = SHOOTER_SIZE + BULLET_RADIUS *1.5
-        self.bullets.append(bullet)
-        t = threading.Timer(self.shooter.fire_rate, self.load_magazine)
-        t.start()
+        if self.shooter.alive:
+            bullet = Bullet()
+            bullet.center.x = self.shooter.center.x + 6
+            bullet.center.y = SHOOTER_SIZE + BULLET_RADIUS *1.5
+            self.bullets.append(bullet)
+            t = threading.Timer(self.shooter.fire_rate, self.load_magazine)
+            t.start()
 
 
     def load_targets(self):
         crate_wall = random.randint (1,5)
         
         if crate_wall != 1:
-            target = Target();
+            target = Target()
+            target.generate_lives(self.score)
             target.center.x =  random.randint(0, SCREEN_WIDTH)
             target.center.y = SCREEN_HEIGHT + target.radius
 
@@ -363,7 +397,7 @@ class Game(arcade.Window):
             target_location = 45
             for _ in range(6):
                 target = Target()
-                
+                target.generate_lives(self.score)
                 target.center.x = target_location
                 target.center.y = SCREEN_HEIGHT + target.radius
                 self.targets.append(target) 
@@ -416,7 +450,7 @@ class Game(arcade.Window):
 
                 if (abs(self.shooter.center.x - target.center.x) < too_close and abs(self.shooter.center.y - target.center.y) < too_close):
                     self.shooter.collide()
-                    target.collide()
+                    target.alive = False
                     
         
         for bullet in self.bullets:
@@ -427,7 +461,7 @@ class Game(arcade.Window):
                     if (abs(bullet.center.x - target.center.x) < too_close and
                                 abs(bullet.center.y - target.center.y) < too_close):
                         # its a hit!
-                        target.collide()
+                        target.collide(self.score)
                         bullet.alive = False
                         
                 
