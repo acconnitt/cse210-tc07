@@ -129,3 +129,6 @@ class GreenTarget(Target):
                 shooter.fire_rate = shooter.fire_rate / 1.1
             self.alive = False
             
+
+
+            
