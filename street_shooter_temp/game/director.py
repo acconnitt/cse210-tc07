@@ -4,7 +4,7 @@ import threading
 from game.shooter import Shooter
 from game.score import Score
 from game.constants import *
-from game.target import Target
+from game.target import Target, RedTarget, BlueTarget, GreenTarget
 from game.bullet import Bullet
 
 
@@ -170,16 +170,23 @@ class Game(arcade.View):
             self.bullets.append(bullet)
             t = threading.Timer(self.shooter.fire_rate, self.load_magazine)
             t.start()
+            
+    def create_target(self):
+        selection = random.randint(1, 100)
+        if selection < 80:
+            target = Target()
+        elif selection < 88:
+            target = RedTarget()    
+        elif selection < 95:
+            target = BlueTarget()
+        else:
+            target = GreenTarget()
 
     def load_targets(self):
         crate_wall = random.randint (1,5)
         
         if crate_wall != 1:
-            target = Target()
-            target.generate_lives(self.score)
-            target.center.x =  random.randint(0, SCREEN_WIDTH)
-            target.center.y = SCREEN_HEIGHT + target.radius
-
+            target = self.create_target()
             self.targets.append(target)
             t = threading.Timer(TARGET_SPAWN_RATE, self.load_targets)
             t.start()
@@ -187,8 +194,7 @@ class Game(arcade.View):
         else:
             target_location = 45
             for _ in range(6):
-                target = Target()
-                target.generate_lives(self.score)
+                target = self.create_target()
                 target.center.x = target_location
                 target.center.y = SCREEN_HEIGHT + target.radius
                 self.targets.append(target) 
@@ -244,5 +250,5 @@ class Game(arcade.View):
                     if (abs(bullet.center.x - target.center.x) < too_close and
                                 abs(bullet.center.y - target.center.y) < too_close):
                         # its a hit!
-                        target.collide(self.score)
+                        target.collide(self.score, self.shooter)
                         bullet.alive = False
