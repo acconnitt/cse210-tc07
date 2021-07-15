@@ -39,7 +39,7 @@ class Target(Flying_Object):
             self.alive = False
 
     def generate_lives(self, score, shooter):
-        self.lives = random.randint(1, (score.score * shooter.damage + 1))
+        self.lives = random.randint(1, (score.score * shooter.damage // 4 + 1))
 
 class RedTarget(Target):
 
