@@ -4,7 +4,7 @@ import threading
 from game.shooter import Shooter
 from game.score import Score
 from game.constants import *
-from game.target import Target
+from game.target import Target, RedTarget, BlueTarget, GreenTarget
 from game.bullet import Bullet
 
 
