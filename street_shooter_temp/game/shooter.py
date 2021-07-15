@@ -50,7 +50,7 @@ class Shooter(Flying_Object):
         y = self.center.y
         angle = self.angle + 90
 
-        arcade.draw_text(f"Power: {self.damage}", SCREEN_WIDTH*.8 , SCREEN_HEIGHT*.95, arcade.color.BLUE, 20)
+        arcade.draw_text(f"Power: {self.damage}", SCREEN_WIDTH*.8 , SCREEN_HEIGHT*.95, arcade.color.PURPLE_HEART, 20)
 
         arcade.draw_text(f"Lives: {self.lives}", 15, SCREEN_HEIGHT*.9, arcade.color.RED, 20)
         if self.alive:
