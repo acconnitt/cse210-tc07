@@ -182,6 +182,11 @@ class Game(arcade.View):
         else:
             target = GreenTarget()
 
+        target.generate_lives(self.score, self.shooter)
+        target.center.x =  random.randint(0, SCREEN_WIDTH)
+        target.center.y = SCREEN_HEIGHT + target.radius
+        return target
+
     def load_targets(self):
         crate_wall = random.randint (1,5)
         
