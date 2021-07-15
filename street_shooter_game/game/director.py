@@ -1,7 +1,6 @@
 import arcade
 import random
 import threading
-import time
 from game.shooter import Shooter
 from game.score import Score
 from game.constants import *
@@ -18,14 +17,20 @@ class InstructionView(arcade.View):
 
     def on_draw(self):
         """ Draw this view """
+        img_hit = "assets/dead_shooter.png"
+        texture = arcade.load_texture(img_hit)
+        alpha = 255
+        angle = 90
+
         arcade.start_render()
         self.window.set_mouse_visible(True)
-        arcade.draw_text("Street Shooter", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
-                         arcade.color.WHITE, font_size=60, anchor_x="center")
-        arcade.draw_text("Use the left and right arrow keys to move.", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-75,
+        arcade.draw_text("Game Over!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
+                         arcade.color.RED, font_size=60, anchor_x="center")
+        arcade.draw_text(f"Your Score was: (COMING SOON)", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-50,
                          arcade.color.WHITE, font_size=20, anchor_x="center")
-        arcade.draw_text("Click to start!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-125,
+        arcade.draw_text("Click to play again!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-100,
                          arcade.color.WHITE, font_size=25, anchor_x="center")
+        arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 5, 100, 100, texture, angle, alpha)
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, start the game. """
@@ -125,7 +130,6 @@ class Game(arcade.View):
             target.advance()
 
         if self.shooter.alive == False:
-            #self.pause(3)
             gameOver = GameOverView()
             self.window.show_view(gameOver)
 
