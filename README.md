@@ -1,4 +1,4 @@
-# [PROGRAM NAME] 
+# Street Shooter 
 [a description of the program]
 
 ## Getting Started
@@ -22,7 +22,7 @@ root                    (project root folder)
 
 ## Required Technologies
 ---
-[list required libraries]
+Python Arcade
 
 ## Authors
 ---
