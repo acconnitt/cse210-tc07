@@ -47,9 +47,7 @@ class GameOverView(arcade.View):
         self.window.set_mouse_visible(True)
         arcade.draw_text("Game Over!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2,
                          arcade.color.RED, font_size=60, anchor_x="center")
-        arcade.draw_text(f"Your Score was: (COMING SOON)", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-50,
-                         arcade.color.WHITE, font_size=20, anchor_x="center")
-        arcade.draw_text("Click to play again!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-100,
+        arcade.draw_text("Click to play again!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-50,
                          arcade.color.WHITE, font_size=25, anchor_x="center")
         arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 5, 100, 100, texture, angle, alpha)
     
