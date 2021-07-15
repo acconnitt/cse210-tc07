@@ -188,7 +188,7 @@ class Game(arcade.View):
         return target
 
     def load_targets(self):
-        crate_wall = random.randint (1,5)
+        crate_wall = random.randint (1,11)
         
         if crate_wall != 1:
             target = self.create_target()
