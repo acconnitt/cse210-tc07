@@ -1,9 +1,9 @@
 # Street Shooter 
-[a description of the program]
+In the game of Street Shooter, the goal is to survive for as long as possible. Touch a box, and you lose a life! You automatically shoot throughout the game. Boxes display their health, and you must get it to 0 for the box to break! Red boxes increase lives, green boxes increase shooting speed, and blue boxes increase bullet damage. Use the left and right arrow keys to move. Good luck!
 
 ## Getting Started
 ---
-[how to install and run the program]
+First, make sure you have the arcade library installed for python. Next, download the zip file and unzip it to your desktop. Open the folder in VS code and run the main.py file. The game should start and the game window will appear.
 
 ## Project Structure
 ---
