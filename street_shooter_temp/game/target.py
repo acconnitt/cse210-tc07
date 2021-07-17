@@ -1,13 +1,19 @@
+# Imports arcade library
 import arcade
+# Imports random library
 import random
-
+# From arcade library import color
 from arcade.color import RED
+# From contastants import all
 from game.constants import *
+# Import flying_object imports Flying_Object
 from game.flying_object import Flying_Object
 
 class Target(Flying_Object):
+    """A Target block that get charge with a number of powers. """
 
     def __init__(self):
+        """Target characteristics. """
         super().__init__()
         self.radius = TARGET_RADIUS
         self.velocity.dy = TARGET_SPEED

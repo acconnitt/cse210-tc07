@@ -1,5 +1,8 @@
+# From contastants import all
 from game.constants import *
+# From director import InstructionView
 from game.director import InstructionView
+# Imports arcade library
 import arcade
 
 # Creates the game and starts it
