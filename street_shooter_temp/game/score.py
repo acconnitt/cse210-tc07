@@ -2,6 +2,7 @@ import arcade
 from game.constants import *
 
 class Score():
+    """Stores a score for the game, and a draw method to put it on the screen"""
     def __init__(self):
         self.score = 0
 
