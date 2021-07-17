@@ -10,7 +10,8 @@ from game.constants import *
 from game.flying_object import Flying_Object
 
 class Target(Flying_Object):
-    """A Target block that get charge with a number of powers. """
+    """A Target block that that goes down from the top of the screen.
+    This target has a number of power and it will be remove after power is = 0."""
 
     def __init__(self):
         """Target characteristics. """
@@ -21,8 +22,7 @@ class Target(Flying_Object):
         self.lives = 1
 
     def draw(self):
-        """ """
-        
+        """draws the target box """
         img = "assets/crate.png"
         texture = arcade.load_texture(img)
         
