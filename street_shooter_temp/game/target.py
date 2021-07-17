@@ -50,7 +50,8 @@ class Target(Flying_Object):
             self.alive = False
 
     def generate_lives(self, score, shooter):
-        """Assigns amount of lives for each target within parameters"""
+        """Assigns a random amount of lives for each new target that is created. 
+        Lives can increase as the score increases"""
         self.lives = random.randint(1, (score.score * shooter.damage // 4 + 1))
 
 
@@ -83,7 +84,7 @@ class RedTarget(Target):
             if self.lives <= 0:
                 score.update_score()
                 if shooter.lives < MAX_LIVES:
-                    """gains a life because target is purple"""
+                    """gains a life"""
                     shooter.lives += 1
                 self.alive = False
 
