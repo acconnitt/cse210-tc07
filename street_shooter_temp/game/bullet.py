@@ -1,8 +1,8 @@
 # Imports arcade library
 import arcade
-# From contastants import all
+# From constants import all
 from game.constants import *
-# Import flying_object imports Flying_Object
+# From flying_object imports Flying_Object
 from game.flying_object import Flying_Object
 
 

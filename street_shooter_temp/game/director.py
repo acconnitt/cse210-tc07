@@ -1,10 +1,18 @@
+# Imports arcade library
 import arcade
+# Imports randomlibrary
 import random
+# Imports threading library
 import threading
+# From shooter imports Shooter
 from game.shooter import Shooter
+# From score imports Score
 from game.score import Score
+# From constants import all
 from game.constants import *
+# From Target imports Target, RedTarget, PurpleTarget, GreenTarget
 from game.target import Target, RedTarget, PurpleTarget, GreenTarget
+# From bullet imports Bullet
 from game.bullet import Bullet
 
 
@@ -31,7 +39,9 @@ class InstructionView(arcade.View):
         game_view = Game()
         self.window.show_view(game_view)
 
+
 class GameOverView(arcade.View):
+    """ View to show instructions """
 
     def on_show(self):
         arcade.set_background_color(arcade.color.CADET_GREY)
@@ -49,14 +59,13 @@ class GameOverView(arcade.View):
                          arcade.color.RED, font_size=60, anchor_x="center")
         arcade.draw_text("Click to play again!", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2-50,
                          arcade.color.WHITE, font_size=25, anchor_x="center")
-        arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 5, 100, 100, texture, angle, alpha)
-    
+        arcade.draw_texture_rectangle(
+            SCREEN_WIDTH / 2, SCREEN_HEIGHT / 5, 100, 100, texture, angle, alpha)
+
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, start the game. """
         instr_view = InstructionView()
         self.window.show_view(instr_view)
-
-
 
 
 class Game(arcade.View):
@@ -84,8 +93,7 @@ class Game(arcade.View):
         self.load_magazine()
 
         # TODO: declare anything here you need the game class to track
-       
-        
+
     def on_draw(self):
         """
         Called automatically by the arcade framework.
@@ -94,8 +102,8 @@ class Game(arcade.View):
 
         # clear the screen to begin drawing
         arcade.start_render()
-        # TODO: draw each object 
-        
+        # TODO: draw each object
+
         for bullet in self.bullets:
             bullet.draw(self.shooter)
 
@@ -109,10 +117,10 @@ class Game(arcade.View):
         """
         Update each object in the game.
         """
-        #self.check_keys()
-        
-        #self.check_off_screen()
-        
+        # self.check_keys()
+
+        # self.check_off_screen()
+
         self.cleanup_zombies()
         self.check_collisions()
 
@@ -126,7 +134,7 @@ class Game(arcade.View):
 
         for target in self.targets:
             if target.center.y < 0:
-               target.alive = False
+                target.alive = False
             target.advance()
 
         if self.shooter.alive == False:
@@ -138,13 +146,13 @@ class Game(arcade.View):
     def check_off_screen(self):
         """Checks to see if an object is offscreen, and wraps the value of
             the object"""
-   
-        self.shooter.is_off_screen(SCREEN_WIDTH, SCREEN_HEIGHT, self.shooter.radius * 2)
-                                    
+
+        self.shooter.is_off_screen(
+            SCREEN_WIDTH, SCREEN_HEIGHT, self.shooter.radius * 2)
+
     def check_keys(self):
         """
         This function checks for keys that are being held down.
-        You will need to put your own method calls in here.
         """
         if arcade.key.LEFT in self.held_keys:
             self.shooter.move_left()
@@ -152,44 +160,34 @@ class Game(arcade.View):
         if arcade.key.RIGHT in self.held_keys:
             self.shooter.move_right()
 
-        if arcade.key.UP in self.held_keys:
-            pass
-        else:
-            pass
-            
-        if arcade.key.DOWN in self.held_keys:
-            pass
-        else:
-            pass
-
     def load_magazine(self):
         if self.shooter.alive:
             bullet = Bullet()
             bullet.center.x = self.shooter.center.x + 6
-            bullet.center.y = SHOOTER_SIZE + BULLET_RADIUS *1.5
+            bullet.center.y = SHOOTER_SIZE + BULLET_RADIUS * 1.5
             self.bullets.append(bullet)
             t = threading.Timer(self.shooter.fire_rate, self.load_magazine)
             t.start()
-            
+
     def create_target(self):
         selection = random.randint(1, 100)
         if selection < 80:
             target = Target()
         elif selection < 88:
-            target = RedTarget()    
+            target = RedTarget()
         elif selection < 95:
             target = PurpleTarget()
         else:
             target = GreenTarget()
 
         target.generate_lives(self.score, self.shooter)
-        target.center.x =  random.randint(0, SCREEN_WIDTH)
+        target.center.x = random.randint(0, SCREEN_WIDTH)
         target.center.y = SCREEN_HEIGHT + target.radius
         return target
 
     def load_targets(self):
-        crate_wall = random.randint (1,11)
-        
+        crate_wall = random.randint(1, 11)
+
         if crate_wall != 1:
             target = self.create_target()
             self.targets.append(target)
@@ -202,15 +200,14 @@ class Game(arcade.View):
                 target = self.create_target()
                 target.center.x = target_location
                 target.center.y = SCREEN_HEIGHT + target.radius
-                self.targets.append(target) 
-                target_location += 90  
+                self.targets.append(target)
+                target_location += 90
             t = threading.Timer(TARGET_SPAWN_RATE, self.load_targets)
             t.start()
 
     def on_key_press(self, key: int, modifiers: int):
         """
         Puts the current key in the set of keys that are being held.
-        You will need to add things here to handle firing the bullet.
         """
         if self.shooter.alive:
             self.held_keys.add(key)
@@ -222,38 +219,38 @@ class Game(arcade.View):
         if key in self.held_keys:
             self.held_keys.remove(key)
             self.shooter.velocity.dx = 0
-                        
+
     def cleanup_zombies(self):
         """
-        Removes any dead bullets, powerups, or asteroids from the list.
+        Removes any dead bullets, powerups, or targets from the list.
         :return:
         """
         for bullet in self.bullets:
             if not bullet.alive:
                 self.bullets.remove(bullet)
 
-        for target in self.targets: 
-            if not target.alive: 
+        for target in self.targets:
+            if not target.alive:
                 self.targets.remove(target)
 
     def check_collisions(self):
         """Contains logic of collisions."""
-        
-        for target in self.targets:  
+
+        for target in self.targets:
             if self.shooter.alive and target.alive:
                 too_close = self.shooter.radius + target.radius
 
                 if (abs(self.shooter.center.x - target.center.x) < too_close and abs(self.shooter.center.y - target.center.y) < too_close):
                     self.shooter.collide()
                     target.alive = False
-                            
+
         for bullet in self.bullets:
             for target in self.targets:
                 if bullet.alive and target.alive:
                     too_close = bullet.radius + target.radius
 
                     if (abs(bullet.center.x - target.center.x) < too_close and
-                                abs(bullet.center.y - target.center.y) < too_close):
+                            abs(bullet.center.y - target.center.y) < too_close):
                         # its a hit!
                         target.collide(self.score, self.shooter)
                         bullet.alive = False
