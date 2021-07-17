@@ -4,7 +4,7 @@ import threading
 from game.shooter import Shooter
 from game.score import Score
 from game.constants import *
-from game.target import Target, RedTarget, BlueTarget, GreenTarget
+from game.target import Target, RedTarget, PurpleTarget, GreenTarget
 from game.bullet import Bullet
 
 
@@ -176,7 +176,7 @@ class Game(arcade.View):
         elif selection < 88:
             target = RedTarget()    
         elif selection < 95:
-            target = BlueTarget()
+            target = PurpleTarget()
         else:
             target = GreenTarget()
 

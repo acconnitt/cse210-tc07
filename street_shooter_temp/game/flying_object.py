@@ -4,8 +4,9 @@ from abc import ABCMeta, abstractmethod
 
 
 class Flying_Object():
-    """Creates an object with a center point, velocity, and radius. Also stores a variable that tells if it should remain on the
-       board after being hit, or when to remove an object when it is offscreen."""
+    """Creates an object with a center point, velocity, and radius. Also stores a 
+    variable that tells if it should remain on the board after being hit, or when 
+    to remove an object when it is offscreen."""
     def __init__(self):    
         self.center = Point()
         self.velocity = Velocity()

@@ -18,7 +18,7 @@ class Bullet(Flying_Object):
         self.velocity.dx = 0
 
     def draw(self, shooter):
-        """draws the bullet sprite. """
+        """draws the bullet sprite."""
         # Bullet image
         img = "assets/laserBlue01.png"
         texture = arcade.load_texture(img)
@@ -27,7 +27,7 @@ class Bullet(Flying_Object):
         height = texture.height
         alpha = 255
 
-        # Bullet Angles
+        # Bullet angles
         x = self.center.x
         y = self.center.y
         angle = self.angle + 90
