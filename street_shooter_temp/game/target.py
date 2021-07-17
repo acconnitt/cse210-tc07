@@ -84,7 +84,7 @@ class RedTarget(Target):
             if self.lives <= 0:
                 score.update_score()
                 if shooter.lives < MAX_LIVES: 
-                     """shooter gets an extra life when it destroys target"""       
+                    """shooter gets more power to damage when it destroys target"""       
                     shooter.lives += 1
                 self.alive = False
 
@@ -147,7 +147,7 @@ class GreenTarget(Target):
         self.lives -= shooter.damage
         if self.lives <= 0:
             score.update_score()
-            if shooter.fire_rate > MAX_FIRE_RATE: 
-                 """increases rate of bullets shooting out"""   
+            if shooter.fire_rate > MAX_FIRE_RATE:
+                """increase rate of shooting"""
                 shooter.fire_rate = shooter.fire_rate / 1.1
             self.alive = False

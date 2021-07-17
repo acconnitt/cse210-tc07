@@ -4,8 +4,7 @@ from game.flying_object import Flying_Object
 
 
 class Shooter(Flying_Object):
-    """Creates the character user can move across bottom of screen. Stores user lives and location that the bullets will be coming from.
-    also stores the damage the bullets have, as well as the fire rate. """
+    """ """
 
     def __init__(self):
         super().__init__()
