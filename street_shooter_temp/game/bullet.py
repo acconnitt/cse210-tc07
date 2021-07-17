@@ -11,6 +11,7 @@ class Bullet(Flying_Object):
     with target. It will be removed after a set distance. """
 
     def __init__(self):
+        """Shooter characteristics."""
         super().__init__()
         self.speed = BULLET_SPEED
         self.radius = BULLET_RADIUS

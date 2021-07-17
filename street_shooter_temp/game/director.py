@@ -57,6 +57,8 @@ class GameOverView(arcade.View):
         self.window.show_view(instr_view)
 
 
+
+
 class Game(arcade.View):
     """
     This class handles all the game callbacks and interaction

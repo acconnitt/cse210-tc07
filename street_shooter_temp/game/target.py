@@ -9,9 +9,10 @@ from game.constants import *
 # Import flying_object imports Flying_Object
 from game.flying_object import Flying_Object
 
+
 class Target(Flying_Object):
     """A target that falls down from the top of the screen. The target loses a
-    life each time it is hit by a bullet, and target is removed when lives = 0."""
+    life each time it is hit by a bullet, and the target is removed when lives = 0."""
 
     def __init__(self):
         """Target characteristics. """
@@ -22,10 +23,10 @@ class Target(Flying_Object):
         self.lives = 1
 
     def draw(self):
-        """draws the target box """
+        """draws the targets"""
         img = "assets/crate.png"
         texture = arcade.load_texture(img)
-        
+
         width = texture.width // 6
         height = texture.height // 6
         alpha = 255
@@ -35,52 +36,61 @@ class Target(Flying_Object):
         y = self.center.y
         angle = self.angle + 90
 
-        arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
+        arcade.draw_texture_rectangle(
+            x, y, width, height, texture, angle, alpha)
         arcade.draw_text(str(self.lives),
                          self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
 
-    def collide (self, score, shooter):
-        """ """
+    def collide(self, score, shooter):
+        """Updates amount of lives when target is hit.
+        Kills target when lives are gone."""
         self.lives -= shooter.damage
         if self.lives <= 0:
             score.update_score()
             self.alive = False
 
     def generate_lives(self, score, shooter):
+        """Assigns amount of lives for each target within parameters"""
         self.lives = random.randint(1, (score.score * shooter.damage // 4 + 1))
 
+
 class RedTarget(Target):
+        """A target that, when hit, adds a life to the shooter."""
 
-    def __init__(self):
-        super().__init__()
-        
+        def __init__(self):
+            super().__init__()
 
-    def draw(self):
+        def draw(self):
 
-        img = "assets/crate-red.png"
-        texture = arcade.load_texture(img)
-        
-        width = texture.width // 6
-        height = texture.height // 6
-        alpha = 255
+            img = "assets/crate-red.png"
+            texture = arcade.load_texture(img)
 
-        x = self.center.x
-        y = self.center.y
-        angle = self.angle + 90
+            width = texture.width // 6
+            height = texture.height // 6
+            alpha = 255
 
-        arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
-        arcade.draw_text(str(self.lives),
-                         self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
+            x = self.center.x
+            y = self.center.y
+            angle = self.angle + 90
 
-    def collide (self, score, shooter):
-        self.lives -= shooter.damage
-        if self.lives <= 0:
-            score.update_score()
-            if shooter.lives < MAX_LIVES:
-                shooter.lives += 1
-            self.alive = False
+            arcade.draw_texture_rectangle(x, y, width, height, texture, angle, alpha)
+            arcade.draw_text(str(self.lives),
+                             self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
+
+        def collide(self, score, shooter):
+            """target is hit and loses a life"""
+            self.lives -= shooter.damage
+            if self.lives <= 0:
+                score.update_score()
+                if shooter.lives < MAX_LIVES:
+                    """gains a life because target is purple"""
+                    shooter.lives += 1
+                self.alive = False
+
 
 class PurpleTarget(Target):
+
+    """A target that, when hit, gives the shooter power to do more damage."""
 
     def __init__(self):
         super().__init__()
@@ -88,7 +98,7 @@ class PurpleTarget(Target):
     def draw(self):
         img = "assets/crate-blue.png"
         texture = arcade.load_texture(img)
-        
+
         width = texture.width // 6
         height = texture.height // 6
         alpha = 255
@@ -101,16 +111,16 @@ class PurpleTarget(Target):
         arcade.draw_text(str(self.lives),
                          self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
 
-    def collide (self, score, shooter):
+    def collide(self, score, shooter):
         self.lives -= shooter.damage
         if self.lives <= 0:
             score.update_score()
             shooter.damage += 1
             self.alive = False
-            
+
 
 class GreenTarget(Target):
-    """"""
+    """A target that, when hit, makes the shooter shoot faster."""
 
     def __init__(self):
         super().__init__()
@@ -118,7 +128,7 @@ class GreenTarget(Target):
     def draw(self):
         img = "assets/crate-green.png"
         texture = arcade.load_texture(img)
-        
+
         width = texture.width // 6
         height = texture.height // 6
         alpha = 255
@@ -131,14 +141,10 @@ class GreenTarget(Target):
         arcade.draw_text(str(self.lives),
                          self.center.x, self.center.y, arcade.color.WHITE, 20, width=100, align="center", anchor_x="center", anchor_y="center")
 
-    def collide (self, score, shooter):
+    def collide(self, score, shooter):
         self.lives -= shooter.damage
         if self.lives <= 0:
             score.update_score()
             if shooter.fire_rate > MAX_FIRE_RATE:
                 shooter.fire_rate = shooter.fire_rate / 1.1
             self.alive = False
-            
-
-
-            
